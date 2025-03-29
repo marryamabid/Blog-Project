@@ -40,9 +40,10 @@ export class AuthService {
         try {
             return await this.account.get();
         } catch (error) {
-            console.error("Appwrite service :: getCurrentUser :: error", error);
-            throw new Error("Failed to fetch user");  // Rethrow error if necessary
+            console.log("Appwrite service :: getCurrentUser :: error", error);
+            
         }
+        return null;
     }
 
     async logout() {

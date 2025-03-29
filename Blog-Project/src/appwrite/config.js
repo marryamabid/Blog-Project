@@ -29,8 +29,8 @@ export class Service {
                 }
             );
         } catch (error) {
-            console.error("AppwriteService error: ", error);
-            return null;
+            console.log("AppwriteService error: :: createPost :: error ", error);
+            ;
         }
     }
 
@@ -48,8 +48,8 @@ export class Service {
                 }
             );
         } catch (error) {
-            console.error("AppwriteService error: ", error);
-            return null;
+            console.log("AppwriteService :: updatePost :: error : ", error);
+            
         }
     }
 
@@ -62,7 +62,7 @@ export class Service {
             );
             return true;
         } catch (error) {
-            console.error("AppwriteService error: ", error);
+            console.log("AppwriteService error:  :: deletePost :: error ", error);
             return false;
         }
     }
@@ -75,8 +75,8 @@ export class Service {
                 slug
             );
         } catch (error) {
-            console.error("AppwriteService error: ", error);
-            return null; // ✅ Return `null` instead of `false`
+            console.log("AppwriteService :: getPost :: error ", error);
+            return false
         }
     }
 
@@ -88,8 +88,8 @@ export class Service {
                 queries,
             );
         } catch (error) {
-            console.error("AppwriteService error: ", error);
-            return [];
+            console.log("AppwriteService :: getPosts :: error ", error);
+            return false;
         }
     }
 //file sevices
@@ -101,8 +101,8 @@ export class Service {
                 file,
             );
         } catch (error) {
-            console.error("AppwriteService error: ", error);
-            return null;
+            console.log("AppwriteService :: uploadFile :: error ", error);
+            return false;
         }
     }
 
@@ -112,13 +112,15 @@ export class Service {
                 conf.appwriteBucketId, fileID);
             return true; // ✅ Added `return true`
         } catch (error) {
-            console.error("AppwriteService error: ", error);
+            console.error("AppwriteService  :: deleteFile :: error ", error);
             return false;
         }
     }
 
     getFilePreview(fileID) {
-        return this.bucket.getFilePreview(conf.appwriteBucketId, fileID);
+        return this.bucket.getFilePreview(
+            conf.appwriteBucketId, fileID
+        );
     }
 }
 

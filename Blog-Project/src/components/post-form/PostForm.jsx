@@ -6,6 +6,8 @@ import  service from "../../appwrite/config"
 import {useNavigate} from "react-router-dom"
 
 function PostForm({post}) {
+    const navigate =useNavigate()
+    const userData = useSelector((state) => state.auth.userData );
     const {register,handleSubmit,watch,setValue,
     getValues,control} = useForm({
         defaultValues:{
@@ -15,11 +17,20 @@ function PostForm({post}) {
             status : post?.status || "active",
         },
     })
-    const navigate =useNavigate()
-    const userData = useSelector( (state)=> state.auth.userData)
+    
+    console.log("userData :: useSelector",userData);
+    if (!userData) {
+        return <div>Loading user data...</div>;
+      }
     const submit = async (data)=>{
+        if (!userData) {
+            console.error("User data is not available. Cannot submit post.");
+            return;
+          }
         if (post) {
             const file =  data.image[0]? await service.uploadFile(data.image[0]) : null;
+            console.log("file :: post",file);
+            
             if (file) {
             service.deleteFile(post.featuredImage);
         }
@@ -28,18 +39,24 @@ function PostForm({post}) {
             ...data,
             featuredImage : file ? file.$id : undefined,
         });
+        console.log("dbPost",dbPost);
         if (dbPost) {
             navigate(`/post/${dbPost.$id}`)
         }
     }else{
             const file =  await service.uploadFile(data.image[0]);
+            console.log("file :: uploadFile",file);
+            
             if(file){
                 const fileId = file.$id;
+                console.log("fileId :: uploadFile",fileId);
                 data.featuredImage=fileId
                 const  dbPost  = await service.createPost({
-                ...data,  
+                ...data, 
+                 
                 userId:userData.$id,
             })
+            console.log("dbPost :: uploadPost",dbPost);
             if (dbPost) {
                 navigate(`/post/${dbPost.$id}`)
             }
